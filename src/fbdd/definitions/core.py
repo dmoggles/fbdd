@@ -1,6 +1,7 @@
 from typing import Callable, Union
 import pandas as pd
 import abc
+import itertools
 
 
 class DataAttribute:
@@ -187,7 +188,8 @@ class PctDerivedAttribute(DerivedDataAttribute):
             and self.denominator_data.N in data.columns
         ):
             data[self.N] = (
-                data[self.numerator_data.N] / data[self.denominator_data.N] * 100
+                data[self.numerator_data.N] /
+                data[self.denominator_data.N] * 100
             ).fillna(0)
 
 
@@ -225,7 +227,8 @@ class DiffDerivedAttribute(DerivedDataAttribute):
 
     def apply(self, data: pd.DataFrame):
         if self.baseline.N in data.columns and self.subtractor.N in data.columns:
-            data[self.N] = (data[self.baseline.N] - data[self.subtractor.N]).fillna(0)
+            data[self.N] = (data[self.baseline.N] -
+                            data[self.subtractor.N]).fillna(0)
 
 
 class SumDerivedAttribute(DerivedDataAttribute):
@@ -242,3 +245,7 @@ class SumDerivedAttribute(DerivedDataAttribute):
     def apply(self, data: pd.DataFrame):
         if self.stat1.N in data.columns and self.stat2.N in data.columns:
             data[self.N] = (data[self.stat1.N] + data[self.stat2.N]).fillna(0)
+
+
+def list_all_values(s: pd.Series) -> pd.Series:
+    return ",".join(set(itertools.chain(*[x.split(",") for x in s.unique()])))
