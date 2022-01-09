@@ -80,6 +80,14 @@ class Data:
         data.data_unique_keys = self.data_unique_keys
         return data
 
+    def concat(self, others: Iterable):
+        if not isinstance(others, Iterable):
+            others = [others]
+        data = Data(pd.concat([self.dataframe]+[o.dataframe for o in others]))
+        data.base_data = self.base_data
+        data.data_unique_keys = self.data_unique_keys
+        return data
+
     def __getitem__(self, cols: Union[Iterable[DataAttribute], DataAttribute]):
         if not isinstance(cols, Iterable):
             cols = [cols]
