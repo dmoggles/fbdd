@@ -182,12 +182,12 @@ class PctDerivedAttribute(DerivedDataAttribute):
         self.numerator_data = numerator_data
         self.denominator_data = denominator_data
 
-    def apply(self, data: pd.DataFrame):
+    def apply(self, data: pd.DataFrame) -> pd.Series:
         if (
             self.numerator_data.N in data.columns
             and self.denominator_data.N in data.columns
         ):
-            data[self.N] = (
+            return (
                 data[self.numerator_data.N] /
                 data[self.denominator_data.N] * 100
             ).fillna(0)
@@ -204,12 +204,12 @@ class RatioDerivedAttribute(DerivedDataAttribute):
         self.numerator_data = numerator_data
         self.denominator_data = denominator_data
 
-    def apply(self, data: pd.DataFrame):
+    def apply(self, data: pd.DataFrame) -> pd.Series:
         if (
             self.numerator_data.N in data.columns
             and self.denominator_data.N in data.columns
         ):
-            data[self.N] = (
+            return (
                 data[self.numerator_data.N] / data[self.denominator_data.N]
             ).fillna(0)
 
@@ -225,10 +225,10 @@ class DiffDerivedAttribute(DerivedDataAttribute):
         self.baseline = baseline
         self.subtractor = subtractor
 
-    def apply(self, data: pd.DataFrame):
+    def apply(self, data: pd.DataFrame) -> pd.Series:
         if self.baseline.N in data.columns and self.subtractor.N in data.columns:
-            data[self.N] = (data[self.baseline.N] -
-                            data[self.subtractor.N]).fillna(0)
+            return (data[self.baseline.N] -
+                    data[self.subtractor.N]).fillna(0)
 
 
 class SumDerivedAttribute(DerivedDataAttribute):
@@ -242,9 +242,9 @@ class SumDerivedAttribute(DerivedDataAttribute):
         self.stat1 = stat1
         self.stat2 = stat2
 
-    def apply(self, data: pd.DataFrame):
+    def apply(self, data: pd.DataFrame) -> pd.Series:
         if self.stat1.N in data.columns and self.stat2.N in data.columns:
-            data[self.N] = (data[self.stat1.N] + data[self.stat2.N]).fillna(0)
+            return (data[self.stat1.N] + data[self.stat2.N]).fillna(0)
 
 
 def list_all_values(s: pd.Series) -> pd.Series:

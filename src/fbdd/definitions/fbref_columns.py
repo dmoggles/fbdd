@@ -1,4 +1,4 @@
-from fbdd.definitions.core import DateDataAttribute, FloatDataAttribute, IntDataAttribute, StrDataAttribute
+from fbdd.definitions.core import DateDataAttribute, DiffDerivedAttribute, FloatDataAttribute, IntDataAttribute, PctDerivedAttribute, RatioDerivedAttribute, StrDataAttribute
 from fbdd.definitions.core import list_all_values
 
 
@@ -202,3 +202,19 @@ CROSSES_STOPPED_PCT_GK = FloatDataAttribute("crosses_stopped_pct_gk")
 DEF_ACTIONS_OUTSIDE_PEN_AREA_GK = FloatDataAttribute(
     "def_actions_outside_pen_area_gk")
 AVG_DISTANCE_DEF_ACTIONS_GK = FloatDataAttribute("avg_distance_def_actions_gk")
+
+
+SHOT_PCT = PctDerivedAttribute("shot_pct", SHOTS_ON_TARGET, SHOTS_TOTAL)
+XG_PER_SHOT = RatioDerivedAttribute("xg_per_shot", XG, SHOTS_TOTAL)
+XG_OUTPERFORM = DiffDerivedAttribute("xg_outperform", GOALS, XG)
+NON_PENALTY_GOALS = DiffDerivedAttribute("non_penalty_goals", GOALS, PENS_MADE)
+SCA_LIVE = DiffDerivedAttribute("sca_live", SCA, SCA_PASSES_DEAD)
+NPXG_PER_SHOT = RatioDerivedAttribute("npxg_per_shot", NPXG, SHOTS_TOTAL)
+NPXG_OUTPERFORM = DiffDerivedAttribute(
+    "npxg_outperform", NON_PENALTY_GOALS, NPXG)
+NPXG_OUTPERFORM_PER_SHOT = RatioDerivedAttribute(
+    "npxg_outperfor_per_shot", NPXG_OUTPERFORM, SHOTS_TOTAL
+)
+NON_PENALTY_GOALS_PER_SHOT = RatioDerivedAttribute(
+    "npg_per_shot", NON_PENALTY_GOALS, SHOTS_TOTAL
+)
