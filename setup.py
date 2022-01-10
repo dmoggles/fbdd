@@ -25,7 +25,10 @@ setup(
         "attrs",
         "aiohttp",
         "asyncio",
-        "tqdm"
+        "tqdm",
+        "scipy",
+        "matplotlib==3.5.1",
+        "highlight_text"
     ],
     classifiers=[
         "Development Status :: 1 - Planning",
