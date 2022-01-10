@@ -24,6 +24,14 @@ class Data:
         self._dataframe = data
 
     @property
+    def df(self):
+        return self._dataframe
+
+    @property
+    def n(self):
+        return len(self.dataframe)
+
+    @property
     def base_data(self):
         return self._base_data
 
@@ -101,6 +109,9 @@ class Data:
         if not isinstance(cols, Iterable):
             cols = [cols]
         return self.dataframe[[c.N for c in cols]]
+
+    def col(self, col: DataAttribute):
+        return self.dataframe[col.N]
 
 
 class FbRefData(Data):
