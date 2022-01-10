@@ -6,3 +6,6 @@ ipykernel
 aiohttp
 asyncio
 tqdm
+scipy
+matplotlib==3.5.1
+highlight_text

@@ -6,3 +6,4 @@ from fbdd.operations.aggregations import per_90, aggregate_by, rank
 from fbdd.definitions import fbref_columns as fc
 from fbdd.operations.possession_adj import possession_adjust
 from fbdd.odm.data_wrappers import FbRefData
+from fbdd.visualisations.violin import plot_violin
