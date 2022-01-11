@@ -27,7 +27,7 @@ setup(
         "asyncio",
         "tqdm",
         "scipy",
-        "matplotlib==3.5.1",
+        "matplotlib==3.3.1",
         "highlight_text"
     ],
     classifiers=[
