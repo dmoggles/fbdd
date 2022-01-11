@@ -50,9 +50,7 @@ class Data:
         func_spec = inspect.getfullargspec(func)
         if func_spec.args[0] == "base_data":
 
-            calculation_result_df = self.dataframe.pipe(
-                func, self.base_data, *args, **kwargs
-            )
+            calculation_result_df = self.dataframe.pipe(func, self.base_data, *args, **kwargs)
         else:
             calculation_result_df = self.dataframe.pipe(func, *args, **kwargs)
 
@@ -123,9 +121,7 @@ class Data:
         **violin_kwargs,
     ):
         if not self.data_unique_keys == [fc.PLAYER_ID, fc.YEAR]:
-            raise ValueError(
-                "Violin plot requires data with player and year as unique keys"
-            )
+            raise ValueError("Violin plot requires data with player and year as unique keys")
         return plot_violin(
             self,
             player1,
@@ -139,10 +135,7 @@ class Data:
 
 class FbRefData(Data):
     def __init__(self, years: List[int]):
-        dfs = [
-            pd.read_parquet(f"https://kovadata.herokuapp.com/data/f/{year}")
-            for year in years
-        ]
+        dfs = [pd.read_parquet(f"https://kovadata.herokuapp.com/data/f/{year}") for year in years]
         data = pd.concat(dfs)
         data = remove_non_top_5_teams(data).drop_duplicates([fc.PLAYER_ID.N, fc.DATE.N])
         for c in DataAttribute._data_list:

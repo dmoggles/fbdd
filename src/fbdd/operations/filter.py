@@ -45,8 +45,8 @@ def apply_filter(input_data: pd.DataFrame, filters: List[Filter]) -> pd.DataFram
 
 
 def remove_non_top_5_teams(input_data: pd.DataFrame) -> pd.DataFrame:
-    """ 
-    Removes all rows with russian and austrian teams.  They are here because Russian premier league and English premier league have the same competition string in fbref, 
+    """
+    Removes all rows with russian and austrian teams.  They are here because Russian premier league and English premier league have the same competition string in fbref,
     as well as German Bundesliga and Austrian Bundesliga.
 
     Args:
