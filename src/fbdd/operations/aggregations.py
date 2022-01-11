@@ -1,18 +1,26 @@
 from typing import List
 import pandas as pd
 
-from fbdd.definitions.core import DataAttribute, DerivedDataAttribute, PctDerivedAttribute, RatioDerivedAttribute
+from fbdd.definitions.core import (
+    DataAttribute,
+    DerivedDataAttribute,
+    PctDerivedAttribute,
+    RatioDerivedAttribute,
+)
 from pandas.api.types import is_numeric_dtype
 from fbdd.definitions import fbref_columns as fc
 
 
-def aggregate_by(data: pd.DataFrame, aggregate_cols: List[DataAttribute]) -> pd.DataFrame:
+def aggregate_by(
+    data: pd.DataFrame, aggregate_cols: List[DataAttribute]
+) -> pd.DataFrame:
     gb = data.groupby([c.N for c in aggregate_cols])
     transforms = {
         c: DataAttribute._name_data_map[c].agg_function
+        if c in DataAttribute._name_data_map
+        and DataAttribute._name_data_map[c].agg_function
+        else "sum"
         for c in data.columns
-        if DataAttribute._name_data_map[c].agg_function
-
     }
     db_agg = gb.agg(transforms)
     for c in DataAttribute._data_list:
@@ -50,7 +58,9 @@ def per_90(data: pd.DataFrame, rename: bool = False) -> pd.DataFrame:
         data_source = data_source.rename(
             columns={
                 c: new_c
-                for c, new_c in zip(columns_to_transform, __per_90_rename(columns_to_transform))
+                for c, new_c in zip(
+                    columns_to_transform, __per_90_rename(columns_to_transform)
+                )
             }
         )
     return data_source
@@ -65,7 +75,8 @@ def rank(data: pd.DataFrame, pct: bool = True, rename: bool = False) -> pd.DataF
     if rename:
         ranked = ranked.rename(
             columns={
-                c: new_c for c, new_c in zip(ranked.columns, __rank_rename(ranked.columns))
+                c: new_c
+                for c, new_c in zip(ranked.columns, __rank_rename(ranked.columns))
             }
         )
     missing_cols = set(data.columns) - set(ranked.columns)

@@ -7,6 +7,7 @@ from fbdd.definitions.core import (
 import pandas as pd
 import itertools
 from fbdd.definitions import fbref_columns as fbrc
+
 VALID_LEAGUES = [
     "Ligue 1",
     "Premier League",

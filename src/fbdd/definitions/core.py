@@ -173,10 +173,7 @@ class DerivedDataAttribute(DataAttribute, abc.ABC):
 
 class PctDerivedAttribute(DerivedDataAttribute):
     def __init__(
-        self,
-        name: str,
-        numerator_data: DataAttribute,
-        denominator_data: DataAttribute,
+        self, name: str, numerator_data: DataAttribute, denominator_data: DataAttribute,
     ):
         super().__init__(name, "float", None)
         self.numerator_data = numerator_data
@@ -188,17 +185,13 @@ class PctDerivedAttribute(DerivedDataAttribute):
             and self.denominator_data.N in data.columns
         ):
             return (
-                data[self.numerator_data.N] /
-                data[self.denominator_data.N] * 100
+                data[self.numerator_data.N] / data[self.denominator_data.N] * 100
             ).fillna(0)
 
 
 class RatioDerivedAttribute(DerivedDataAttribute):
     def __init__(
-        self,
-        name: str,
-        numerator_data: DataAttribute,
-        denominator_data: DataAttribute,
+        self, name: str, numerator_data: DataAttribute, denominator_data: DataAttribute,
     ):
         super().__init__(name, "float", None)
         self.numerator_data = numerator_data
@@ -209,17 +202,14 @@ class RatioDerivedAttribute(DerivedDataAttribute):
             self.numerator_data.N in data.columns
             and self.denominator_data.N in data.columns
         ):
-            return (
-                data[self.numerator_data.N] / data[self.denominator_data.N]
-            ).fillna(0)
+            return (data[self.numerator_data.N] / data[self.denominator_data.N]).fillna(
+                0
+            )
 
 
 class DiffDerivedAttribute(DerivedDataAttribute):
     def __init__(
-        self,
-        name: str,
-        baseline: DataAttribute,
-        subtractor: DataAttribute,
+        self, name: str, baseline: DataAttribute, subtractor: DataAttribute,
     ):
         super().__init__(name, "float", None)
         self.baseline = baseline
@@ -227,16 +217,12 @@ class DiffDerivedAttribute(DerivedDataAttribute):
 
     def apply(self, data: pd.DataFrame) -> pd.Series:
         if self.baseline.N in data.columns and self.subtractor.N in data.columns:
-            return (data[self.baseline.N] -
-                    data[self.subtractor.N]).fillna(0)
+            return (data[self.baseline.N] - data[self.subtractor.N]).fillna(0)
 
 
 class SumDerivedAttribute(DerivedDataAttribute):
     def __init__(
-        self,
-        name: str,
-        stat1: DataAttribute,
-        stat2: DataAttribute,
+        self, name: str, stat1: DataAttribute, stat2: DataAttribute,
     ):
         super().__init__(name, "float", None)
         self.stat1 = stat1

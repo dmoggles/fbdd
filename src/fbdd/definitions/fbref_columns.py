@@ -1,4 +1,12 @@
-from fbdd.definitions.core import DateDataAttribute, DiffDerivedAttribute, FloatDataAttribute, IntDataAttribute, PctDerivedAttribute, RatioDerivedAttribute, StrDataAttribute
+from fbdd.definitions.core import (
+    DateDataAttribute,
+    DiffDerivedAttribute,
+    FloatDataAttribute,
+    IntDataAttribute,
+    PctDerivedAttribute,
+    RatioDerivedAttribute,
+    StrDataAttribute,
+)
 from fbdd.definitions.core import list_all_values
 
 
@@ -185,8 +193,7 @@ PENS_ATT_GK = FloatDataAttribute("pens_att_gk")
 PENS_ALLOWED = FloatDataAttribute("pens_allowed")
 PENS_SAVED = FloatDataAttribute("pens_saved")
 PENS_MISSED_GK = FloatDataAttribute("pens_missed_gk")
-PASSES_COMPLETED_LAUNCHED_GK = FloatDataAttribute(
-    "passes_completed_launched_gk")
+PASSES_COMPLETED_LAUNCHED_GK = FloatDataAttribute("passes_completed_launched_gk")
 PASSES_LAUNCHED_GK = FloatDataAttribute("passes_launched_gk")
 PASSES_PCT_LAUNCHED_GK = FloatDataAttribute("passes_pct_launched_gk")
 PASSES_GK = FloatDataAttribute("passes_gk")
@@ -199,8 +206,7 @@ GOAL_KICK_LENGTH_AVG = FloatDataAttribute("goal_kick_length_avg")
 CROSSES_GK = FloatDataAttribute("crosses_gk")
 CROSSES_STOPPED_GK = FloatDataAttribute("crosses_stopped_gk")
 CROSSES_STOPPED_PCT_GK = FloatDataAttribute("crosses_stopped_pct_gk")
-DEF_ACTIONS_OUTSIDE_PEN_AREA_GK = FloatDataAttribute(
-    "def_actions_outside_pen_area_gk")
+DEF_ACTIONS_OUTSIDE_PEN_AREA_GK = FloatDataAttribute("def_actions_outside_pen_area_gk")
 AVG_DISTANCE_DEF_ACTIONS_GK = FloatDataAttribute("avg_distance_def_actions_gk")
 
 
@@ -210,8 +216,7 @@ XG_OUTPERFORM = DiffDerivedAttribute("xg_outperform", GOALS, XG)
 NON_PENALTY_GOALS = DiffDerivedAttribute("non_penalty_goals", GOALS, PENS_MADE)
 SCA_LIVE = DiffDerivedAttribute("sca_live", SCA, SCA_PASSES_DEAD)
 NPXG_PER_SHOT = RatioDerivedAttribute("npxg_per_shot", NPXG, SHOTS_TOTAL)
-NPXG_OUTPERFORM = DiffDerivedAttribute(
-    "npxg_outperform", NON_PENALTY_GOALS, NPXG)
+NPXG_OUTPERFORM = DiffDerivedAttribute("npxg_outperform", NON_PENALTY_GOALS, NPXG)
 NPXG_OUTPERFORM_PER_SHOT = RatioDerivedAttribute(
     "npxg_outperfor_per_shot", NPXG_OUTPERFORM, SHOTS_TOTAL
 )
