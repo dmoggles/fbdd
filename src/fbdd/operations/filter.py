@@ -6,7 +6,7 @@ from fbdd.definitions import fbref_columns as fc
 
 NON_TOP_5_TEAMS = ['CSKA Moscow', 'Spartak Moscow',
                    'Shakhtar', 'Loko Moscow', 'Krasnodar', 'Dynamo Mosc', 'Zenit',
-                   'Rostov', 'Dynamo Kyiv', 'RB Salzburg', 'LASK']
+                   'Rostov', 'Dynamo Kyiv', 'RB Salzburg', 'LASK', 'Rubin Kazan', 'Arsenal Tula', 'Samara', 'Sochi', 'Austria Wien', 'Sturm Graz', 'Rapid Wien', 'CS Emelec', 'Independiente']
 
 
 def apply_filter(input_data: pd.DataFrame, filters: List[Filter]) -> pd.DataFrame:
