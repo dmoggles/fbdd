@@ -135,7 +135,9 @@ class IntDataAttribute(NumericDataAttribute):
 
 
 class StrDataAttribute(NativeDataAttribute):
-    def __init__(self, name, transform_function=None, rename_to=None, agg_function="first"):
+    def __init__(
+        self, name, transform_function=None, rename_to=None, agg_function="first"
+    ):
         super().__init__(
             name,
             "str",
@@ -147,7 +149,9 @@ class StrDataAttribute(NativeDataAttribute):
 
 
 class DateDataAttribute(NativeDataAttribute):
-    def __init__(self, name, transform_function=None, rename_to=None, agg_function="first"):
+    def __init__(
+        self, name, transform_function=None, rename_to=None, agg_function="first"
+    ):
         super().__init__(
             name,
             "datetime64",
@@ -179,8 +183,13 @@ class PctDerivedAttribute(DerivedDataAttribute):
         self.denominator_data = denominator_data
 
     def apply(self, data: pd.DataFrame) -> pd.Series:
-        if self.numerator_data.N in data.columns and self.denominator_data.N in data.columns:
-            return (data[self.numerator_data.N] / data[self.denominator_data.N] * 100).fillna(0)
+        if (
+            self.numerator_data.N in data.columns
+            and self.denominator_data.N in data.columns
+        ):
+            return (
+                data[self.numerator_data.N] / data[self.denominator_data.N] * 100
+            ).fillna(0)
 
 
 class RatioDerivedAttribute(DerivedDataAttribute):
@@ -195,8 +204,13 @@ class RatioDerivedAttribute(DerivedDataAttribute):
         self.denominator_data = denominator_data
 
     def apply(self, data: pd.DataFrame) -> pd.Series:
-        if self.numerator_data.N in data.columns and self.denominator_data.N in data.columns:
-            return (data[self.numerator_data.N] / data[self.denominator_data.N]).fillna(0)
+        if (
+            self.numerator_data.N in data.columns
+            and self.denominator_data.N in data.columns
+        ):
+            return (data[self.numerator_data.N] / data[self.denominator_data.N]).fillna(
+                0
+            )
 
 
 class DiffDerivedAttribute(DerivedDataAttribute):

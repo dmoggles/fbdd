@@ -49,7 +49,9 @@ def get_layout(stats_to_use, n_cols):
 def get_quantiles(kde, league_data, stat):
     return [
         least_squares(
-            lambda x: kde.integrate_box_1d(0, x) / kde.integrate_box_1d(0, league_data.col(stat).max()) - 0.2 * (i + 1),
+            lambda x: kde.integrate_box_1d(0, x)
+            / kde.integrate_box_1d(0, league_data.col(stat).max())
+            - 0.2 * (i + 1),
             league_data.col(stat).min(),
             gtol=1e-15,
             jac="3-point",
@@ -59,7 +61,11 @@ def get_quantiles(kde, league_data, stat):
 
 
 def get_player_stat_line(data, player, stat):
-    return data.pipe(apply_filter, [Filter(fc.PLAYER, player, filters.EQ)]).col(stat).item()
+    return (
+        data.pipe(apply_filter, [Filter(fc.PLAYER, player, filters.EQ)])
+        .col(stat)
+        .item()
+    )
 
 
 def draw_filled_curve(ax: plt.Axes, kde, min_v, max_v, y_mult, color, opacity):
@@ -78,7 +84,9 @@ def estimate_maxima(data):
     return probs.max()
 
 
-def draw_half_violin(ax: plt.Axes, data, d, quantiles, stat, player_statline, kde, max_stat):
+def draw_half_violin(
+    ax: plt.Axes, data, d, quantiles, stat, player_statline, kde, max_stat
+):
 
     for i in range(5):
         if i == 0:
@@ -115,7 +123,9 @@ def draw_half_violin(ax: plt.Axes, data, d, quantiles, stat, player_statline, kd
                 opacity = OUT_OPACITY
             else:
                 opacity = IN_OPACITY
-            draw_filled_curve(ax, kde, min_v, max_v, d, VIOLIN_PLOT_SECTION_COLOURS[i], opacity)
+            draw_filled_curve(
+                ax, kde, min_v, max_v, d, VIOLIN_PLOT_SECTION_COLOURS[i], opacity
+            )
 
 
 def plot_single_violin(
@@ -150,7 +160,9 @@ def plot_single_violin(
         kdes[0].integrate_box_1d(0, player_league_data[0].col(stat).max()),
         kdes[0].integrate_box_1d(0, player_league_data[1].col(stat).max()),
     ]
-    max_stat = max(player_league_data[0].col(stat).max(), player_league_data[1].col(stat).max())
+    max_stat = max(
+        player_league_data[0].col(stat).max(), player_league_data[1].col(stat).max()
+    )
     max_kde = max(
         estimate_maxima(player_league_data[0].col(stat)),
         estimate_maxima(player_league_data[1].col(stat)),
@@ -243,7 +255,9 @@ def plot_violin(
     rows, cols = get_layout(stats_to_use, n_cols)
     main = np.arange(rows * cols).reshape(rows, cols)
 
-    layout = np.concatenate([np.tile(["title"], (1, cols)), main, np.tile(["annot"], (1, cols))])
+    layout = np.concatenate(
+        [np.tile(["title"], (1, cols)), main, np.tile(["annot"], (1, cols))]
+    )
 
     fig, axes = plt.subplot_mosaic(
         layout,

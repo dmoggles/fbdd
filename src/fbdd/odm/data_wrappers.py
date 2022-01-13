@@ -4,7 +4,8 @@ import inspect
 from fbdd.definitions import fbref_columns as fc
 from fbdd.definitions.core import DataAttribute, DerivedDataAttribute
 from functools import reduce
-from fbdd.visualisations.violin import plot_violin
+
+
 from fbdd.operations.filter import remove_non_top_5_teams
 
 
@@ -50,7 +51,9 @@ class Data:
         func_spec = inspect.getfullargspec(func)
         if func_spec.args[0] == "base_data":
 
-            calculation_result_df = self.dataframe.pipe(func, self.base_data, *args, **kwargs)
+            calculation_result_df = self.dataframe.pipe(
+                func, self.base_data, *args, **kwargs
+            )
         else:
             calculation_result_df = self.dataframe.pipe(func, *args, **kwargs)
 
@@ -111,31 +114,13 @@ class Data:
     def col(self, col: DataAttribute):
         return self.dataframe[col.N]
 
-    def violin(
-        self,
-        player1: str,
-        player2: str,
-        player1_year: int,
-        player2_year: int,
-        stats_to_use: List[DataAttribute],
-        **violin_kwargs,
-    ):
-        if not self.data_unique_keys == [fc.PLAYER_ID, fc.YEAR]:
-            raise ValueError("Violin plot requires data with player and year as unique keys")
-        return plot_violin(
-            self,
-            player1,
-            player2,
-            player1_year,
-            player2_year,
-            stats_to_use,
-            **violin_kwargs,
-        )
-
 
 class FbRefData(Data):
     def __init__(self, years: List[int]):
-        dfs = [pd.read_parquet(f"https://kovadata.herokuapp.com/data/f/{year}") for year in years]
+        dfs = [
+            pd.read_parquet(f"https://kovadata.herokuapp.com/data/f/{year}")
+            for year in years
+        ]
         data = pd.concat(dfs)
         data = remove_non_top_5_teams(data).drop_duplicates([fc.PLAYER_ID.N, fc.DATE.N])
         for c in DataAttribute._data_list:

@@ -1,6 +1,6 @@
 import abc
 import pandas as pd
-
+import numpy as np
 from fbdd.definitions.core import DataAttribute
 
 

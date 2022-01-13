@@ -1,5 +1,4 @@
 import pandas as pd
-
 from fbdd.operations.filter_objects import Filter
 from typing import List
 from fbdd.definitions import fbref_columns as fc

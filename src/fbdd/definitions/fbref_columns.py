@@ -179,7 +179,9 @@ PROGRESSIVE_CARRIES = FloatDataAttribute("progressive_carries")
 DRIBBLES_COMPLETED = FloatDataAttribute("dribbles_completed")
 DRIBBLES = FloatDataAttribute("dribbles")
 
-YEAR_FB_REF = IntDataAttribute("year", rename_to="season", agg_function="first", immutable=True)
+YEAR_FB_REF = IntDataAttribute(
+    "year", rename_to="season", agg_function="first", immutable=True
+)
 
 SHOTS_ON_TARGET_AGAINST = FloatDataAttribute("shots_on_target_against")
 GOALS_AGAINST_GK = FloatDataAttribute("goals_against_gk")
@@ -215,5 +217,9 @@ NON_PENALTY_GOALS = DiffDerivedAttribute("non_penalty_goals", GOALS, PENS_MADE)
 SCA_LIVE = DiffDerivedAttribute("sca_live", SCA, SCA_PASSES_DEAD)
 NPXG_PER_SHOT = RatioDerivedAttribute("npxg_per_shot", NPXG, SHOTS_TOTAL)
 NPXG_OUTPERFORM = DiffDerivedAttribute("npxg_outperform", NON_PENALTY_GOALS, NPXG)
-NPXG_OUTPERFORM_PER_SHOT = RatioDerivedAttribute("npxg_outperfor_per_shot", NPXG_OUTPERFORM, SHOTS_TOTAL)
-NON_PENALTY_GOALS_PER_SHOT = RatioDerivedAttribute("npg_per_shot", NON_PENALTY_GOALS, SHOTS_TOTAL)
+NPXG_OUTPERFORM_PER_SHOT = RatioDerivedAttribute(
+    "npxg_outperform_per_shot", NPXG_OUTPERFORM, SHOTS_TOTAL
+)
+NON_PENALTY_GOALS_PER_SHOT = RatioDerivedAttribute(
+    "npg_per_shot", NON_PENALTY_GOALS, SHOTS_TOTAL
+)

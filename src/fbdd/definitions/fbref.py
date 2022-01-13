@@ -1,11 +1,4 @@
-from fbdd.definitions.core import (
-    DateDataAttribute,
-    FloatDataAttribute,
-    IntDataAttribute,
-    StrDataAttribute,
-)
-import pandas as pd
-import itertools
+
 from fbdd.definitions import fbref_columns as fbrc
 
 VALID_LEAGUES = [
