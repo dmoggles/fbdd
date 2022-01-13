@@ -14,7 +14,9 @@ def __per_90_rename(cols: List[str], minutes: float) -> List[str]:
 
 
 def per_90(data: pd.DataFrame, rename: bool = False) -> pd.DataFrame:
+    minutes = data[fc.MINUTES.N].values
     data_source = extrapolate_to_minutes(data, 90)
+    data_source[fc.MINUTES.N]=minutes
 
     return data_source
 
