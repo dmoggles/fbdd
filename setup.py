@@ -28,7 +28,7 @@ setup(
         "tqdm",
         "scipy",
         "matplotlib==3.3.1",
-        "highlight_text"
+        "highlight_text",
     ],
     classifiers=[
         "Development Status :: 1 - Planning",

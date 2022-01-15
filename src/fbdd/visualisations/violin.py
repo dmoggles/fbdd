@@ -268,7 +268,8 @@ def plot_violin(
         gridspec_kw={"height_ratios": [0.025] + [0.95 / rows] * rows + [0.025]},
     )
     axes_list = [v for k, v in axes.items() if k not in ["annot", "title"]]
-    for ax, stat in zip(axes_list, stats_to_use):
+    for i, stat in enumerate(stats_to_use):
+        ax = axes[str(i)]
         plot_single_violin(
             ax,
             data,
@@ -279,25 +280,26 @@ def plot_violin(
             stat,
             player_highlight_colors,
         )
-    for ax in axes_list[len(stats_to_use) :]:
+    for i in range(len(axes_list))[len(stats_to_use) :]:
+        ax = axes[str(i)]
         ax.axis("off")
 
-    title = f"<{player1} {player1_year}> vs <{player2} {player2_year}>"
-    ax_text(
-        0.5,
-        0.5,
-        title,
-        highlight_textprops=[
-            {"color": player_highlight_colors[0]},
-            {"color": player_highlight_colors[1]},
-        ],
-        size=16 * (SMALL_SCALE if small else 1),
-        fig=fig,
-        textalign="center",
-        ha="center",
-        va="center",
-        ax=axes["title"],
-    )
+        title = f"<{player1} {player1_year}> vs <{player2} {player2_year}>"
+        ax_text(
+            0.5,
+            0.5,
+            title,
+            highlight_textprops=[
+                {"color": player_highlight_colors[0]},
+                {"color": player_highlight_colors[1]},
+            ],
+            size=16 * (SMALL_SCALE if small else 1),
+            fig=fig,
+            textalign="center",
+            ha="center",
+            va="center",
+            ax=axes["title"],
+        )
 
     ax_text(
         0.05,

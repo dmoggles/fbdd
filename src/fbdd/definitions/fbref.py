@@ -1,4 +1,3 @@
-
 from fbdd.definitions import fbref_columns as fbrc
 
 VALID_LEAGUES = [

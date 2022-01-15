@@ -7,7 +7,6 @@ from fbdd.definitions.core import (
 )
 
 
-
 def aggregate_by(
     data: pd.DataFrame, aggregate_cols: List[DataAttribute]
 ) -> pd.DataFrame:

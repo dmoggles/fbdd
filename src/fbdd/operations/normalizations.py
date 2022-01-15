@@ -16,7 +16,7 @@ def __per_90_rename(cols: List[str], minutes: float) -> List[str]:
 def per_90(data: pd.DataFrame, rename: bool = False) -> pd.DataFrame:
     minutes = data[fc.MINUTES.N].values
     data_source = extrapolate_to_minutes(data, 90)
-    data_source[fc.MINUTES.N]=minutes
+    data_source[fc.MINUTES.N] = minutes
 
     return data_source
 
@@ -29,7 +29,7 @@ def extrapolate_to_minutes(
         c
         for c in data_source.columns
         if is_numeric_dtype(data_source[c])
-        and c not in [fc.MINUTES.name, fc.YEAR.name]
+        and c not in [fc.YEAR.name]
         and not (
             c in DataAttribute._name_data_map
             and isinstance(
