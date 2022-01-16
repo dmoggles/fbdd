@@ -2,8 +2,10 @@ import pandas as pd
 from typing import Callable, Iterable, List, Union
 import inspect
 from fbdd.definitions import fbref_columns as fc
+from fbdd.definitions import understat_columns as uc
 from fbdd.definitions.core import DataAttribute, DerivedDataAttribute
 from functools import reduce
+from fbdd.definitions.understat import TEAM_RENAMES
 
 
 from fbdd.operations.filter import remove_non_top_5_teams
@@ -130,3 +132,23 @@ class FbRefData(Data):
                     data[c.N] = derived_col
 
         super().__init__(data)
+
+class UnderstatData(Data):
+    def __init__(self, league:str, years:List[int]):
+        dfs = [
+            pd.read_parquet(f"https://kovadata.herokuapp.com/data/u/{league}/{year}") for year in years
+        ]
+        data = pd.concat(dfs)
+        for d in dir(uc):
+            a = getattr(uc, d)
+            
+            if isinstance(a, DataAttribute):
+            
+                data[a.N] = a.apply(data[a.N])
+        data[uc.HOME_TEAM.N] = data[uc.HOME_TEAM.N].replace(TEAM_RENAMES)
+        data[uc.AWAY_TEAM.N] = data[uc.AWAY_TEAM.N].replace(TEAM_RENAMES)
+        super().__init__(data)
+        self.data_unique_keys=[uc.ID]
+
+            
+
