@@ -21,3 +21,6 @@ AWAY_GOALS= core.IntDataAttribute('a_goals', immutable=True)
 DATE=core.DateDataAttribute('date', transform_function=lambda x: pd.Timestamp(x).date())
 PLAYER_ASSISTED=core.StrDataAttribute('player_assisted')
 LAST_ACTION=core.StrDataAttribute('lastAction')
+
+
+PLAYER_TEAM = core.LambdaDerivedAttribute('player_team','str','first', lambda r: r[HOME_TEAM.N] if r[HOME_OR_AWAY.N] == 'h' else r[AWAY_TEAM.N])

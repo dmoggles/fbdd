@@ -245,5 +245,22 @@ class SumDerivedAttribute(DerivedDataAttribute):
             return (data[self.stat1.N] + data[self.stat2.N]).fillna(0)
 
 
+class LambdaDerivedAttribute(DerivedDataAttribute):
+    def __init__(
+        self, 
+        name:str,
+        type:str,
+        agg_function:str,
+        function:Callable[[pd.DataFrame], pd.Series]
+    
+    ):
+        super().__init__(name, type, agg_function)
+        self.function = function
+    
+    def apply(self, data: pd.DataFrame) -> pd.Series:
+        return data.apply(self.function, axis=1)
+
 def list_all_values(s: pd.Series) -> pd.Series:
     return ",".join(set(itertools.chain(*[x.split(",") for x in s.unique()])))
+
+
