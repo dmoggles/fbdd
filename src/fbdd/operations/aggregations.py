@@ -24,7 +24,10 @@ def aggregate_by(
     db_agg = gb.agg(transforms)
     for c in DataAttribute._data_list:
         if isinstance(c, DerivedDataAttribute):
-            db_agg[c.N] = c.apply(db_agg)
+            try:
+                db_agg[c.N] = c.apply(db_agg)
+            except KeyError:
+                pass
     indx_cols = db_agg.index.names
 
     db_agg = db_agg[set(db_agg.columns) - set(indx_cols)]

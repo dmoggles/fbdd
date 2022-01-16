@@ -2,7 +2,11 @@ from typing import Callable, Union
 import pandas as pd
 import abc
 import itertools
+from enum import Enum
 
+class DataSources(Enum):
+    FBREF = "fbref"
+    UNDERSTAT = "understat"
 
 class DataAttribute:
     _name_data_map = {}
@@ -14,19 +18,23 @@ class DataAttribute:
         data_type: Union[str, type],
         agg_function: Callable,
         immutable: bool,
+        source=DataSources.FBREF
     ):
         self.name = name
         self.data_type = data_type
         self.agg_function = agg_function
         self.immutable = immutable
         self._data_list.append(self)
-
+        self._source = source
         self._name_data_map[self.name] = self
 
     @property
     def N(self):
         return self.name
 
+    @property
+    def source(self):
+        return self._source
 
 class NativeDataAttribute(DataAttribute):
     def __init__(
@@ -37,8 +45,9 @@ class NativeDataAttribute(DataAttribute):
         rename_to=None,
         agg_function="sum",
         immutable=False,
+        source=DataSources.FBREF
     ):
-        super().__init__(name, data_type, agg_function, immutable)
+        super().__init__(name, data_type, agg_function, immutable, source)
         self.transform_function = transform_function
         self.rename_to = rename_to
 
@@ -79,6 +88,7 @@ class NumericDataAttribute(NativeDataAttribute):
         rename_to=None,
         agg_function="sum",
         immutable=False,
+        source=DataSources.FBREF
     ):
         super().__init__(
             name,
@@ -87,6 +97,7 @@ class NumericDataAttribute(NativeDataAttribute):
             rename_to=rename_to,
             agg_function=agg_function,
             immutable=immutable,
+            source=source
         )
 
     def pre_type_conversion_transform(self, column: pd.Series) -> pd.Series:
@@ -104,6 +115,7 @@ class FloatDataAttribute(NumericDataAttribute):
         rename_to=None,
         agg_function="sum",
         immutable=False,
+        source=DataSources.FBREF
     ):
         super().__init__(
             name,
@@ -112,6 +124,7 @@ class FloatDataAttribute(NumericDataAttribute):
             rename_to=rename_to,
             agg_function=agg_function,
             immutable=immutable,
+            source=source
         )
 
 
@@ -123,6 +136,7 @@ class IntDataAttribute(NumericDataAttribute):
         rename_to=None,
         agg_function="sum",
         immutable=False,
+        source=DataSources.FBREF
     ):
         super().__init__(
             name,
@@ -131,12 +145,13 @@ class IntDataAttribute(NumericDataAttribute):
             rename_to=rename_to,
             agg_function=agg_function,
             immutable=immutable,
+            source=source
         )
 
 
 class StrDataAttribute(NativeDataAttribute):
     def __init__(
-        self, name, transform_function=None, rename_to=None, agg_function="first"
+        self, name, transform_function=None, rename_to=None, agg_function="first",source=DataSources.FBREF
     ):
         super().__init__(
             name,
@@ -145,12 +160,13 @@ class StrDataAttribute(NativeDataAttribute):
             rename_to=rename_to,
             agg_function=agg_function,
             immutable=False,
+            source=DataSources.FBREF
         )
 
 
 class DateDataAttribute(NativeDataAttribute):
     def __init__(
-        self, name, transform_function=None, rename_to=None, agg_function="first"
+        self, name, transform_function=None, rename_to=None, agg_function="first",source=DataSources.FBREF
     ):
         super().__init__(
             name,
@@ -159,12 +175,13 @@ class DateDataAttribute(NativeDataAttribute):
             rename_to=rename_to,
             agg_function=agg_function,
             immutable=False,
+            source=DataSources.FBREF
         )
 
 
 class DerivedDataAttribute(DataAttribute, abc.ABC):
-    def __init__(self, name: str, data_type: Union[str, type], agg_function: Callable):
-        super().__init__(name, data_type, agg_function, immutable=False)
+    def __init__(self, name: str, data_type: Union[str, type], agg_function: Callable, source=DataSources.FBREF):
+        super().__init__(name, data_type, agg_function, immutable=False, source=source)
 
     @abc.abstractmethod
     def apply(self, data: pd.DataFrame) -> pd.Series:
@@ -177,8 +194,9 @@ class PctDerivedAttribute(DerivedDataAttribute):
         name: str,
         numerator_data: DataAttribute,
         denominator_data: DataAttribute,
+        source=DataSources.FBREF
     ):
-        super().__init__(name, "float", None)
+        super().__init__(name, "float", None, source=source)
         self.numerator_data = numerator_data
         self.denominator_data = denominator_data
 
@@ -198,8 +216,9 @@ class RatioDerivedAttribute(DerivedDataAttribute):
         name: str,
         numerator_data: DataAttribute,
         denominator_data: DataAttribute,
+        source=DataSources.FBREF
     ):
-        super().__init__(name, "float", None)
+        super().__init__(name, "float", None, source=source)
         self.numerator_data = numerator_data
         self.denominator_data = denominator_data
 
@@ -219,8 +238,9 @@ class DiffDerivedAttribute(DerivedDataAttribute):
         name: str,
         baseline: DataAttribute,
         subtractor: DataAttribute,
+        source=DataSources.FBREF
     ):
-        super().__init__(name, "float", None)
+        super().__init__(name, "float", None, source=source)
         self.baseline = baseline
         self.subtractor = subtractor
 
@@ -235,8 +255,9 @@ class SumDerivedAttribute(DerivedDataAttribute):
         name: str,
         stat1: DataAttribute,
         stat2: DataAttribute,
+        source=DataSources.FBREF
     ):
-        super().__init__(name, "float", None)
+        super().__init__(name, "float", None, source=source)
         self.stat1 = stat1
         self.stat2 = stat2
 
@@ -251,10 +272,11 @@ class LambdaDerivedAttribute(DerivedDataAttribute):
         name:str,
         type:str,
         agg_function:str,
-        function:Callable[[pd.DataFrame], pd.Series]
+        function:Callable[[pd.DataFrame], pd.Series],
+        source=DataSources.FBREF
     
     ):
-        super().__init__(name, type, agg_function)
+        super().__init__(name, type, agg_function, source=source)
         self.function = function
     
     def apply(self, data: pd.DataFrame) -> pd.Series:

@@ -3,7 +3,7 @@ from typing import Callable, Iterable, List, Union
 import inspect
 from fbdd.definitions import fbref_columns as fc
 from fbdd.definitions import understat_columns as uc
-from fbdd.definitions.core import DataAttribute, DerivedDataAttribute, NativeDataAttribute
+from fbdd.definitions.core import DataAttribute, DataSources, DerivedDataAttribute, NativeDataAttribute
 from functools import reduce
 from fbdd.definitions.understat import TEAM_RENAMES
 
@@ -126,7 +126,7 @@ class FbRefData(Data):
         data = pd.concat(dfs)
         data = remove_non_top_5_teams(data).drop_duplicates([fc.PLAYER_ID.N, fc.DATE.N])
         for c in DataAttribute._data_list:
-            if isinstance(c, DerivedDataAttribute):
+            if isinstance(c, DerivedDataAttribute) and c.source==DataSources.FBREF:
                 derived_col = c.apply(data)
                 if isinstance(derived_col, pd.Series):
                     data[c.N] = derived_col
