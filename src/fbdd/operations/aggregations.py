@@ -1,3 +1,4 @@
+
 from typing import List
 import pandas as pd
 
@@ -5,7 +6,7 @@ from fbdd.definitions.core import (
     DataAttribute,
     DerivedDataAttribute,
 )
-
+from fbdd.definitions import fbref_columns as fc
 
 def aggregate_by(
     data: pd.DataFrame, aggregate_cols: List[DataAttribute]
@@ -48,3 +49,23 @@ def rank(data: pd.DataFrame, pct: bool = True, rename: bool = False) -> pd.DataF
     for c in missing_cols:
         ranked[c] = data[c]
     return ranked
+
+def common_minutes(data: pd.DataFrame) -> pd.DataFrame:
+    def _common_minutes_agg(x):
+        if len(x)>2:
+            raise ValueError('Can only be used with 2 players')
+        if len(x)< 2:
+            return 0
+        started=x[fc.STARTED.N].values
+        minutes=x[fc.MINUTES.N].values
+        if (started[0].startswith('Y') and started[1].startswith('Y')) or (started[0].startswith('Y') and started[1].startswith('Y')):
+            return min(minutes)
+        else:
+            if started[0].startswith('Y'):
+                return max( minutes[0]-(90-minutes[1]),0)
+            else:
+                return max(minutes[1]-(90-minutes[0]),0)
+
+    common_minutes_data =  data.groupby([fc.COMPETITION.N, fc.TEAM.N, fc.OPPONENT.N, fc.DATE.N]).apply(_common_minutes_agg)
+    common_minutes_data.name=fc.MINUTES.N
+    return common_minutes_data.reset_index().sort_values(fc.DATE.N)
