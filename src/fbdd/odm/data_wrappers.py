@@ -6,7 +6,7 @@ from fbdd.definitions import understat_columns as uc
 from fbdd.definitions.core import DataAttribute, DataSources, DerivedDataAttribute, NativeDataAttribute
 from functools import reduce
 from fbdd.definitions.understat import TEAM_RENAMES
-
+from fbdd.utils.fuzzy_merge import create_fuzzy_merge_reference_column
 
 from fbdd.operations.filter import remove_non_top_5_teams
 
@@ -91,6 +91,20 @@ class Data:
         data.data_unique_keys = self.data_unique_keys
         return data
 
+    def fuzzy_merge(self, other, fuzzy_this_col:DataAttribute, fuzzy_other_col:DataAttribute, this_cols:List[DataAttribute]=None, other_cols:List[DataAttribute]=None, how:str = "left", suffixes:tuple=("_x", "_y"), threshold:float = 0.8, limit:int=1):
+        if not this_cols:
+            this_cols = []
+        if not other_cols:
+            other_cols = []
+
+        data = self.dataframe.copy()
+        data = create_fuzzy_merge_reference_column(data, other.dataframe, fuzzy_this_col.N, fuzzy_other_col.N, threshold=threshold, limit=limit)
+        merged_data = pd.merge(data, other.dataframe,left_on=[f'__fuzzy_{fuzzy_other_col.N}']+[c.N for c in this_cols], right_on=[fuzzy_other_col.N]+[c.N for c in other_cols], how=how, suffixes=suffixes)
+        data_obj = Data(merged_data)
+        data_obj.base_data = self.base_data
+        data_obj.data_unique_keys = [fuzzy_this_col] + other_cols
+        return data_obj
+
     def concat(self, others: Iterable):
         if not isinstance(others, Iterable):
             others = [others]
@@ -149,8 +163,8 @@ class UnderstatData(Data):
             if isinstance(a, NativeDataAttribute):
             
                 data[a.N] = a.apply(data[a.N])
-        data[uc.HOME_TEAM.N] = data[uc.HOME_TEAM.N].replace(TEAM_RENAMES)
-        data[uc.AWAY_TEAM.N] = data[uc.AWAY_TEAM.N].replace(TEAM_RENAMES)
+        #data[uc.HOME_TEAM.N] = data[uc.HOME_TEAM.N].replace(TEAM_RENAMES)
+        #data[uc.AWAY_TEAM.N] = data[uc.AWAY_TEAM.N].replace(TEAM_RENAMES)
         data[uc.PLAYER_TEAM.N] = uc.PLAYER_TEAM.apply(data)
         super().__init__(data)
         self.data_unique_keys=[uc.ID]

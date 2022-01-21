@@ -29,6 +29,8 @@ setup(
         "scipy",
         "matplotlib==3.3.1",
         "highlight_text",
+        "fuzzywuzzy",
+        "python-Levenshtein"
     ],
     classifiers=[
         "Development Status :: 1 - Planning",
