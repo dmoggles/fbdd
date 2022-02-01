@@ -67,6 +67,11 @@ class Contains(FilterOperation):
     def apply(frame: pd.DataFrame, column: pd.Series, value: str):
         return frame.loc[column.str.contains(value)]
 
+class NotContains(FilterOperation):
+    @staticmethod
+    def apply(frame: pd.DataFrame, column: pd.Series, value: str):
+        return frame.loc[~column.str.contains(value)]
+
 
 class Filter:
     def __init__(self, column: DataAttribute, value, operation: FilterOperation):
